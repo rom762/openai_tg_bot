@@ -16,6 +16,7 @@ async def start(update, context):
     context.chat_data.clear()
     await update.message.reply_text('Hi! I am your AI bot. Ask me anything!')
 
+
 async def send_audio(update, context):
     user_request = ' '.join(context.args).strip()
     logging.debug(user_request)
@@ -23,6 +24,7 @@ async def send_audio(update, context):
 
     with open(filename, 'rb') as af:
        await context.bot.send_audio(chat_id=update.effective_chat.id, audio=af)
+
 
 async def handle_message(update, context):
 
@@ -67,6 +69,7 @@ async def handle_message(update, context):
 
         await update.message.reply_text(bot_response)
 
+
 async def stats(update, context):
     messages = context.chat_data.get('messages', [])
     tokens = context.chat_data.get('total_tokens', 0)
@@ -76,7 +79,6 @@ async def stats(update, context):
 
 def main():
     application = ApplicationBuilder().token(settings.telegram_bot_token).build()
-    
     
     application.add_handler(CommandHandler(["start", "help"], start))
     application.add_handler(CommandHandler(["stats",], stats))
