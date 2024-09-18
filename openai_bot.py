@@ -1,9 +1,12 @@
 import logging
-from telegram.ext import CommandHandler, MessageHandler, ApplicationBuilder, filters
+from telegram.ext import (CommandHandler, MessageHandler, ApplicationBuilder,
+                          filters, ConversationHandler)
 from openai import OpenAI
 import settings
 import yt_dlp as youtube_dl
 from youtube_dwnld import download_mp3
+from anketa import anketa_start, second_cat, final_step
+from make_image import get_image_filename
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -79,12 +82,25 @@ async def stats(update, context):
 
 def main():
     application = ApplicationBuilder().token(settings.telegram_bot_token).build()
-    
+
+    anketa = ConversationHandler(
+        entry_points=[
+            MessageHandler(filters.Regex('^(мемас с котами)$'), anketa_start)
+        ],
+        states={
+            "second_cat": [MessageHandler(filters.TEXT, second_cat)],
+            "final": [MessageHandler(filters.TEXT, final_step)]
+        },
+        fallbacks=[]
+    )
+
+    application.add_handler(anketa)
     application.add_handler(CommandHandler(["start", "help"], start))
     application.add_handler(CommandHandler(["stats",], stats))
     application.add_handler(CommandHandler(["file", "music"], send_audio))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND,
-                                           handle_message))
+
+    # application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND,
+    #                                        handle_message))
     application.run_polling()
 
 
