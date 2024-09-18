@@ -11,16 +11,16 @@ def download_mp3(url):
     filename = f"{video_info['title']}.mp3"
     print(filename)
     if not is_exist(filename):    
-        options={
-              'format':'bestaudio/best',
-              'keepvideo':False,
-              'outtmpl':filename,
+        options = {
+              'format': 'bestaudio/best',
+              'keepvideo': False,
+              'outtmpl': filename,
         }
 
     try:
         with youtube_dl.YoutubeDL(options) as ydl:
             ydl.download([video_info['webpage_url']])
-    except:
+    except Exception as e:
         result=f"ERROR, can't download this url"
 
     return filename

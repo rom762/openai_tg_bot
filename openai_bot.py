@@ -26,22 +26,23 @@ async def send_audio(update, context):
     filename = download_mp3(user_request)
 
     with open(filename, 'rb') as af:
-       await context.bot.send_audio(chat_id=update.effective_chat.id, audio=af)
+        await context.bot.send_audio(chat_id=update.effective_chat.id, audio=af)
 
 
 async def handle_message(update, context):
 
-    await context.bot.send_chat_action(chat_id=update.effective_chat.id, action='typing')
+    await context.bot.send_chat_action(chat_id=update.effective_chat.id,
+                                       action='typing')
     message = update.message.text
     logging.info(f'User message:{message}')
     if "https://www.youtube.com" in message:
         await context.bot.send_message(update.effective_chat.id, "Please wait...")
-        video_info = youtube_dl.YoutubeDL().extract_info(url = message, download=False)
+        video_info = youtube_dl.YoutubeDL().extract_info(url=message, download=False)
         filename = f"{video_info['title']}.mp3"
-        options={
-            'format':'bestaudio/best',
-            'keepvideo':False,
-            'outtmpl':filename,
+        options = {
+            'format': 'bestaudio/best',
+            'keepvideo': False,
+            'outtmpl': filename,
         }
         with youtube_dl.YoutubeDL(options) as ydl:
             ydl.download([video_info['webpage_url']])
@@ -99,8 +100,8 @@ def main():
     application.add_handler(CommandHandler(["stats",], stats))
     application.add_handler(CommandHandler(["file", "music"], send_audio))
 
-    # application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND,
-    #                                        handle_message))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND,
+                                           handle_message))
     application.run_polling()
 
 
