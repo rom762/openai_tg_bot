@@ -17,10 +17,10 @@ def get_image_filename(first_text: str, second_text: str) -> str:
 
     img = Image.open(template_fn)
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype(ttf, 16)
+    font = ImageFont.truetype(ttf, size=16)
     draw.text((245, 150), first_text, (255, 255, 255), font=font)
-    draw.text((30, 360), f"{second_text}?", (255, 255, 255), font=font)
     draw.text((245, 360), f"{second_text}", (255, 255, 255), font=font)
+    draw.text((30, 360), f"{second_text}?", (255, 255, 255), font=font)
 
     output_filename = os.path.join(os.getcwd(), 'images', f"{datetime.strftime(datetime.now(), '%Y%m%d_%H%M%S')}_output.jpg")
     img.save(output_filename)
@@ -28,7 +28,7 @@ def get_image_filename(first_text: str, second_text: str) -> str:
 
 
 if __name__ == '__main__':
-    filename = get_image_filename('Sample text', 'And one more')
+    filename = get_image_filename('Ты предприниматель', 'и красотка')
     print(f"filename: {filename}")
     if filename:
         image = Image.open(filename)
