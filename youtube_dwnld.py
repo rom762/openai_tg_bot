@@ -21,7 +21,7 @@ def download_mp3(url):
         with youtube_dl.YoutubeDL(options) as ydl:
             ydl.download([video_info['webpage_url']])
     except Exception as e:
-        result=f"ERROR, can't download this url"
+        result = f"ERROR, can't download this url"
 
     return filename
 
